@@ -71,8 +71,10 @@ AUG_Init = {
 
 AUG_AddAction = {
 	// mp issues may occure
-	ls = (_this select 0) addAction ["", {[(_this select 0)] Call AUG_Action},[],1.5,true,true,"","speed _target <= 1 AND speed _target >= -1"];
-	(_this select 0) setVariable ["AUG_Act",ls,true];
+	_ls = (_this select 0) addAction ["", {[(_this select 0)] Call AUG_Action},[],1.5,true,true,"","speed _target <= 1 AND speed _target >= -1"];
+	_vls = (_this select 0) addAction ["", {[(_this select 0), (_this select 1)] Call AUG_GetIn},[],1.5,true,true,"","typeNAME (_target getVariable 'AUG_Attached') != 'BOOL'"];
+	(_this select 0) setVariable ["AUG_Act_GetIn",_vls,true];
+	(_this select 0) setVariable ["AUG_Act",_ls,true];
 	(_this select 0) setVariable["AUG_Attached",false,true];
 	(_this select 0) setVariable["AUG_Local",false,true];
 };
@@ -82,6 +84,12 @@ AUG_UpdateState = {
 	(_this select 0) setUserActionText [(_this select 0) getVariable "AUG_Act" ,(_this select 1)];
 };
 
+AUG_UpdateGetInState = {
+	//Update Action
+	(_this select 0) setUserActionText [(_this select 0) getVariable "AUG_Act_GetIn",(_this select 1)];
+};
+
+
 AUG_Action = {
 	_veh = (_this select 0);
 	if( typeNAME(_veh getVariable["AUG_Attached",false]) == "OBJECT")  then {
@@ -90,61 +98,18 @@ AUG_Action = {
 		[_veh] call AUG_Attach;
 	}
 };
-
-AUG_Attach = {
-private["_veh","_aug"];	//Import Variables
-	_veh = (_this select 0);
-	_aug = _veh getVariable["AUG_Local",false];
-	{
-		if((typeOf _veh) in (_x select 0)) then{
-			_vars = ["",""];
-			if(typeOf _aug in AUG_MG) then {_vars = (_x select 1);};
-			if(typeOf _aug in AUG_LMG) then {_vars = (_x select 2);};
-			if(typeOf _aug in AUG_L) then {_vars = (_x select 3);};
-			if(typeOf _aug in AUG_M) then {_vars = (_x select 4);};
-
-			_aug attachto [_veh,(_vars select 0)];
-			_aug setdir  (_vars select 1);
-			[_veh] spawn (_vars select 2);
-		};
-
-	} foreach AUG_VehConfig;
-
-
-
-	//Event Handler
-	[[_aug,"GetOut",{(_this select 2) setPos (_aug modelToWorld [-3,-1.1,-0.1])}],"mpAddEventHand",true,true] spawn BIS_fnc_MP;
-	 _veh setVariable["AUG_Attached",_aug,true];
-	 _veh setVariable["AUG_Local",false,true];
-	 //Display name
-	 _Cname = typeOf _aug;
-	 _Dname = getText (configFile >> "cfgVehicles" >> _Cname >> "displayName");
-	 [_veh,format["<t color='#ff0000'>Detach %1</t>",_Dname]] spawn AUG_UpdateState;
+AUG_GetIn = {
+	_aug = (_this select 0) getVariable["AUG_Attached",false];
+	(_this select 1) moveInGunner _aug;
 };
-
-AUG_Detach = {
-	private["_veh"];	//Import Variables
-	_veh = (_this select 0);
-	_aug = _veh getVariable "AUG_Attached";
-	//Detach
-	detach _aug;
-	_aug setPos [(_veh modelToWorld [0,-5,0]) select 0,(_veh modelToWorld [0,-5,0]) select 1,0];
-	//Remove event Handler
-	[[_aug,"GetOut", 0],"mpRemoveEventHand",true,true]spawn BIS_fnc_MP;
-	_veh setVariable["AUG_Attached",false,true];
-	[_veh] spawn AUG_Scan;
-};
-
-
 
 AUG_Scan = {
-
 	_veh = (_this select 0);
 	while {alive _veh && typeNAME (_veh getVariable["AUG_Attached",false]) != "OBJECT"} do {
 	if (speed _veh <= 1 AND speed _veh >= -1 ) then {
 			//Detection
 			_NO = nearestObjects [[(_veh modelToWorld [0,-5,0]) select 0,(_veh modelToWorld [0,-5,0]) select 1,0],AUG_ALL,5];
-			if((count _NO)>=1)then{
+			if((count _NO)>=1)then {
 				_aug = (_NO select 0);
 				_current =  _veh getVariable["AUG_Local",false];
 				_test  =  false;
@@ -170,8 +135,53 @@ AUG_Scan = {
 				[_veh,""] spawn AUG_UpdateState;
 			};
 		};
-			sleep 1;
+		sleep 1;
 	};
+};
+
+AUG_Attach = {
+private["_veh","_aug"];	//Import Variables
+	_veh = (_this select 0);
+	_aug = _veh getVariable["AUG_Local",false];
+	if((count (crew _aug)) > 0) exitWith {hint 'Weapon must be empty to mount';};
+	{
+		if((typeOf _veh) in (_x select 0)) then{
+			_vars = ["",""];
+			if(typeOf _aug in AUG_MG) then {_vars = (_x select 1);};
+			if(typeOf _aug in AUG_LMG) then {_vars = (_x select 2);};
+			if(typeOf _aug in AUG_L) then {_vars = (_x select 3);};
+			if(typeOf _aug in AUG_M) then {_vars = (_x select 4);};
+
+			_aug attachto [_veh,(_vars select 0)];
+			_aug setdir  (_vars select 1);
+			[_veh] spawn (_vars select 2);
+		};
+	} foreach AUG_VehConfig;
+	//Event Handler ((getpos (_this select 0))findEmptyPosition [2,10,"Man"])
+	[[_aug,"GetOut",{(_this select 2) moveInany (attachedTo(_this select 0)); 	doGetOut (_this select 2); }],"mpAddEventHand",true,true] spawn BIS_fnc_MP;
+
+	 _veh setVariable["AUG_Attached",_aug,true];
+	 _veh setVariable["AUG_Local",false,true];
+
+	 //Display name
+	 _Cname = typeOf _aug;
+	 _Dname = getText (configFile >> "cfgVehicles" >> _Cname >> "displayName");
+	 [_veh,format["<t color='#ff0000'>Detach %1</t>",_Dname]] spawn AUG_UpdateState;
+	 [_veh,format ["Get in %1 as Gunner",_Dname]] spawn AUG_UpdateGetInState;
+};
+
+AUG_Detach = {
+	private["_veh"];	//Import Variables
+	_veh = (_this select 0);
+	_aug = _veh getVariable "AUG_Attached";
+	if((count (crew _aug)) > 0) exitWith {hint 'Weapon must be empty to dismount';};
+	//Detach
+	detach _aug;
+	_aug setPos [(_veh modelToWorld [0,-5,0]) select 0,(_veh modelToWorld [0,-5,0]) select 1,0];
+	//Remove event Handler
+	[[_aug,"GetOut", 0],"mpRemoveEventHand",true,true]spawn BIS_fnc_MP;
+	_veh setVariable["AUG_Attached",false,true];
+	[_veh] spawn AUG_Scan;
 };
 
 //temp
