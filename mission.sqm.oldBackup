@@ -1,0 +1,322 @@
+version=12;
+class Mission
+{
+	addOns[]=
+	{
+		"A3_Characters_F_BLUFOR",
+		"a3_characters_f",
+		"3DEN",
+		"a3_modules_f_curator_curator",
+		"A3_Static_F_Mortar_01",
+		"A3_Static_F_Gamma",
+		"a3_static_f",
+		"A3_Static_F_Gamma_AA",
+		"A3_Static_F_Gamma_AT",
+		"A3_Misc_F_Helpers",
+		"A3_Soft_F_Gamma_Offroad",
+		"a3_soft_f_offroad_01",
+		"map_vr"
+	};
+	addOnsAuto[]=
+	{
+		"A3_Characters_F_BLUFOR",
+		"a3_characters_f",
+		"3DEN",
+		"a3_modules_f_curator_curator",
+		"A3_Static_F_Mortar_01",
+		"A3_Static_F_Gamma",
+		"a3_static_f",
+		"A3_Static_F_Gamma_AA",
+		"A3_Static_F_Gamma_AT",
+		"A3_Misc_F_Helpers",
+		"A3_Soft_F_Gamma_Offroad",
+		"a3_soft_f_offroad_01",
+		"map_vr"
+	};
+	randomSeed=1356559;
+	class Intel
+	{
+		timeOfChanges=1800.0002;
+		startWeather=0;
+		startWind=0.1;
+		startWaves=0.1;
+		forecastWeather=0;
+		forecastWind=0.1;
+		forecastWaves=0.1;
+		forecastLightnings=0.1;
+		year=2035;
+		day=28;
+		hour=13;
+		minute=37;
+		startFogDecay=0.0049999999;
+		forecastFogDecay=0.0049999999;
+	};
+	class Groups
+	{
+		items=2;
+		class Item0
+		{
+			side="WEST";
+			class Vehicles
+			{
+				items=2;
+				class Item0
+				{
+					position[]={4017.6799,5,3982.6055};
+					id=0;
+					side="WEST";
+					vehicle="B_Soldier_F";
+					player="PLAYER COMMANDER";
+					leader=1;
+					skill=0.60000002;
+					syncId=0;
+					synchronizations[]={1};
+				};
+				class Item1
+				{
+					position[]={4019.8118,5,3981.3169};
+					id=1;
+					side="WEST";
+					vehicle="B_Soldier_F";
+					player="PLAY CDG";
+					skill=0.60000002;
+				};
+			};
+		};
+		class Item1
+		{
+			side="LOGIC";
+			class Vehicles
+			{
+				items=1;
+				class Item0
+				{
+					position[]={4006.1838,5,3968.2813};
+					class args
+					{
+						items=4;
+						class Item0
+						{
+							value="";
+							parentCls="ModuleCurator_F";
+							typeName="Owner";
+						};
+						class Item1
+						{
+							value="";
+							parentCls="ModuleCurator_F";
+							typeName="Name";
+						};
+						class Item2
+						{
+							value="2";
+							parentCls="ModuleCurator_F";
+							typeName="Addons";
+						};
+						class Item3
+						{
+							value="0";
+							parentCls="ModuleCurator_F";
+							typeName="Forced";
+						};
+					};
+					id=2;
+					side="LOGIC";
+					vehicle="ModuleCurator_F";
+					leader=1;
+					lock="UNLOCKED";
+					skill=0.60000002;
+					syncId=1;
+					synchronizations[]={0};
+				};
+			};
+		};
+	};
+	class Vehicles
+	{
+		items=11;
+		class Item0
+		{
+			position[]={4013.8616,5,3993.3218};
+			id=3;
+			side="EMPTY";
+			vehicle="B_Mortar_01_F";
+			skill=0.60000002;
+		};
+		class Item1
+		{
+			position[]={4014.8206,5,3987.8037};
+			id=4;
+			side="EMPTY";
+			vehicle="I_HMG_01_high_F";
+			skill=0.60000002;
+		};
+		class Item2
+		{
+			position[]={4025.3303,5,3992.5063};
+			id=5;
+			side="EMPTY";
+			vehicle="I_GMG_01_high_F";
+			skill=0.60000002;
+		};
+		class Item3
+		{
+			position[]={4024.6331,5,3987.9194};
+			id=6;
+			side="EMPTY";
+			vehicle="I_static_AA_F";
+			skill=0.60000002;
+		};
+		class Item4
+		{
+			position[]={4019.76,5,3985.8267};
+			id=7;
+			side="EMPTY";
+			vehicle="O_static_AT_F";
+			skill=0.60000002;
+		};
+		class Item5
+		{
+			position[]={4005.8352,5,3983.2036};
+			id=8;
+			side="EMPTY";
+			vehicle="Sign_Sphere100cm_F";
+			skill=0.60000002;
+			text="b";
+		};
+		class Item6
+		{
+			position[]={4036.3403,5,3991.6191};
+			id=9;
+			side="EMPTY";
+			vehicle="B_G_Offroad_01_F";
+			skill=0.60000002;
+			text="a";
+			init="nul = [this] execVM ""OffroadAUG.sqf"";";
+		};
+		class Item7
+		{
+			position[]={4039.6206,5,3983.9658};
+			id=10;
+			side="EMPTY";
+			vehicle="I_HMG_01_F";
+			skill=0.60000002;
+			text="e";
+		};
+		class Item8
+		{
+			position[]={4034.3354,5,3984.0186};
+			id=11;
+			side="EMPTY";
+			vehicle="I_GMG_01_F";
+			skill=0.60000002;
+			text="c";
+		};
+		class Item9
+		{
+			position[]={4024.3157,5,3972.0371};
+			id=12;
+			side="EMPTY";
+			vehicle="I_GMG_01_A_F";
+			isUAV=1;
+			skill=0.60000002;
+		};
+		class Item10
+		{
+			position[]={4014.1135,5,3981.2529};
+			id=13;
+			side="EMPTY";
+			vehicle="B_G_Offroad_01_F";
+			skill=0.60000002;
+			text="a_1";
+			init="nul = [this] execVM ""OffroadAUG.sqf"";";
+		};
+	};
+};
+class Intro
+{
+	addOns[]=
+	{
+		"map_vr"
+	};
+	addOnsAuto[]=
+	{
+		"map_vr"
+	};
+	randomSeed=5041981;
+	class Intel
+	{
+		timeOfChanges=1800.0002;
+		startWeather=0;
+		startWind=0.1;
+		startWaves=0.1;
+		forecastWeather=0;
+		forecastWind=0.1;
+		forecastWaves=0.1;
+		forecastLightnings=0.1;
+		year=2035;
+		day=28;
+		hour=13;
+		minute=37;
+		startFogDecay=0.0049999999;
+		forecastFogDecay=0.0049999999;
+	};
+};
+class OutroWin
+{
+	addOns[]=
+	{
+		"map_vr"
+	};
+	addOnsAuto[]=
+	{
+		"map_vr"
+	};
+	randomSeed=2906465;
+	class Intel
+	{
+		timeOfChanges=1800.0002;
+		startWeather=0;
+		startWind=0.1;
+		startWaves=0.1;
+		forecastWeather=0;
+		forecastWind=0.1;
+		forecastWaves=0.1;
+		forecastLightnings=0.1;
+		year=2035;
+		day=28;
+		hour=13;
+		minute=37;
+		startFogDecay=0.0049999999;
+		forecastFogDecay=0.0049999999;
+	};
+};
+class OutroLoose
+{
+	addOns[]=
+	{
+		"map_vr"
+	};
+	addOnsAuto[]=
+	{
+		"map_vr"
+	};
+	randomSeed=5520903;
+	class Intel
+	{
+		timeOfChanges=1800.0002;
+		startWeather=0;
+		startWind=0.1;
+		startWaves=0.1;
+		forecastWeather=0;
+		forecastWind=0.1;
+		forecastWaves=0.1;
+		forecastLightnings=0.1;
+		year=2035;
+		day=28;
+		hour=13;
+		minute=37;
+		startFogDecay=0.0049999999;
+		forecastFogDecay=0.0049999999;
+	};
+};
