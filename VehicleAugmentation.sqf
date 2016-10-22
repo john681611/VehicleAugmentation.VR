@@ -15,13 +15,36 @@ AUG_Vehicles = [
 "C_Van_01_transport_F",
 
 "I_C_Offroad_02_unarmed_F",
-"C_Offroad_02_unarmed_F"
+"C_Offroad_02_unarmed_F",
+
+"I_C_Boat_Transport_02_F",
+"C_Boat_Transport_02_F",
+
+"B_Boat_Transport_01_F",
+"B_T_Boat_Transport_01_F",
+"B_G_Boat_Transport_01_F",
+"O_Boat_Transport_01_F",
+"O_T_Boat_Transport_01_F",
+"O_G_Boat_Transport_01_F",
+"I_Boat_Transport_01_F",
+"I_C_Boat_Transport_01_F",
+
+"B_Lifeboat",
+"B_T_Lifeboat",
+"O_Lifeboat",
+"O_T_Lifeboat",
+
+"C_Rubberboat"
+
 ];
 AUG_VehConfig = [
 //[vehicles,[MG pos,dir,(optional Code)],[LMG pos,dir,(optional Code)],[L pos,dir,(optional Code)],[M pos,dir,(optional Code)]]
 [["B_G_Offroad_01_F","I_G_Offroad_01_F","O_G_Offroad_01_F","C_Offroad_01_F"],[[0.25,-2,1],0],[[-0.1,-2,0.5],180,{(_this select 0) animate ["HideDoor3", 1];}],[[0,-1.5,0.25],180],[[0,-2,0],0]],
 [["I_G_Van_01_transport_F","B_G_Van_01_transport_F","O_G_Van_01_transport_F","I_C_Van_01_transport_F","C_Van_01_transport_F"],[[0.25,-2,1],0],[[-0.1,-2,0.6],180],[[0,-1.5,0.4],180],[[0,-2,0.1],0]],
-[["I_C_Offroad_02_unarmed_F","C_Offroad_02_unarmed_F"],[[0.25,-1,1],0,{(_this select 0) animate ["hideRearDoor",1]; (_this select 0) animate["hideSeatsRear",1];}],[[-0.1,-1,0.5],180,{(_this select 0) animate ["hideRearDoor",1]; (_this select 0) animate["hideSeatsRear",1];}],[[0,-0.8,0.25],180,{(_this select 0) animate ["hideRearDoor",1]; (_this select 0) animate["hideSeatsRear",1];}],[[0,-1.5,0],0,{(_this select 0) animate ["hideRearDoor",1]; (_this select 0) animate["hideSeatsRear",1];}]]
+[["I_C_Offroad_02_unarmed_F","C_Offroad_02_unarmed_F"],[[0.25,-1,1],0,{(_this select 0) animate ["hideRearDoor",1]; (_this select 0) animate["hideSeatsRear",1];}],[[-0.1,-1,0.5],180,{(_this select 0) animate ["hideRearDoor",1]; (_this select 0) animate["hideSeatsRear",1];}],[[0,-0.8,0.25],180,{(_this select 0) animate ["hideRearDoor",1]; (_this select 0) animate["hideSeatsRear",1];}],[[0,-1.5,0],0,{(_this select 0) animate ["hideRearDoor",1]; (_this select 0) animate["hideSeatsRear",1];}]],
+
+[["I_C_Boat_Transport_02_F","C_Boat_Transport_02_F"],[[0.25,2,1],0],[[-0.1,2,1],0],[[0,1.5,0.4],0],[[0,2,0.1],0]],
+[["B_Boat_Transport_01_F","B_T_Boat_Transport_01_F","B_G_Boat_Transport_01_F","O_Boat_Transport_01_F","O_T_Boat_Transport_01_F","O_G_Boat_Transport_01_F","I_Boat_Transport_01_F","I_C_Boat_Transport_01_F","B_Lifeboat","B_T_Lifeboat","O_Lifeboat","O_T_Lifeboat","C_Rubberboat"],[[0.25,1,0.7],0],[[0,1.7,0.6],0],[[0,1,0],0],[[0,1,-0.25],0]]
 ];
 //Global List of weapons that can be mounted
 //Machine Guns
