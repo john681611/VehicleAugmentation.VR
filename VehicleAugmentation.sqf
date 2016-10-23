@@ -73,7 +73,7 @@ _index = _this select 2;
 _obj removeEventHandler [_type, _index];
 };
 
-/* Not sure we need
+
 mpSetDir = {
 private["_obj","_dir"];
 _obj = _this select 0;
@@ -81,7 +81,7 @@ _dir = _this select 1;
 
 _obj setDir _dir;
 };
-*/
+
 //Functions
 AUG_Init = {
 	{
@@ -94,42 +94,56 @@ AUG_Init = {
 
 AUG_AddAction = {
 	// mp issues may occure
-	_ls = (_this select 0) addAction ["", {[(_this select 0)] Call AUG_Action},[],1.5,true,true,"","speed _target <= 1 AND speed _target >= -1"];
-	_vls = (_this select 0) addAction ["", {[(_this select 0), (_this select 1)] Call AUG_GetIn},[],1.5,true,true,"","typeNAME (_target getVariable 'AUG_Attached') != 'BOOL'"];
-	(_this select 0) setVariable ["AUG_Act_GetIn",_vls,true];
-	(_this select 0) setVariable ["AUG_Act",_ls,true];
+	_ls = [ (_this select 0),"","","","speed _target <= 1 AND speed _target >= -1 AND _target distance _this < 5  AND vehicle _this == _this AND ( typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' OR typeNAME (_target getVariable 'AUG_Local') != 'BOOL')","true",{},{},{},{},[],13,nil,false,false] call BIS_fnc_holdActionAdd;
+	_vls = (_this select 0) addAction ["", {[(_this select 0),(_this select 1)] spawn AUG_GetIn;},[],5.5,true,true,"","typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' AND _target distance _this < 5"];
+	(_this select 0) setVariable ["AUG_Act",_ls,false];
+	(_this select 0) setVariable ["AUG_Act_GetIn",_vls,false];
 	(_this select 0) setVariable["AUG_Attached",false,true];
 	(_this select 0) setVariable["AUG_Local",false,true];
+
+
 };
 
 AUG_UpdateState = {
 	//Update Action
-	(_this select 0) setUserActionText [(_this select 0) getVariable "AUG_Act" ,(_this select 1)];
-};
+	[(_this select 0),((_this select 0) getVariable "AUG_Act")] call BIS_fnc_holdActionRemove;
+ 	_ls = [ (_this select 0),(_this select 1),
+				"\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_unbind_ca.paa",
+				"\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_unbind_ca.paa",
+				"speed _target <= 1 AND speed _target >= -1 AND _target distance _this < 5 AND vehicle _this == _this AND ( typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' OR typeNAME (_target getVariable 'AUG_Local') != 'BOOL')",
+				"true",
+					{(_this select 1) playMoveNow  "Acts_carFixingWheel";}
+					,{},
+					{(_this select 1) switchmove "";[(_this select 0)] Call AUG_Action;},
+					{(_this select 1) switchmove "";},[],13,1.5,false,false] Call BIS_fnc_holdActionAdd;
+	(_this select 0) setVariable ["AUG_Act",_ls,false];
 
+};
 AUG_UpdateGetInState = {
 	//Update Action
-	(_this select 0) setUserActionText [(_this select 0) getVariable "AUG_Act_GetIn",(_this select 1)];
+	(_this select 0) setUserActionText [(_this select 0) getVariable "AUG_Act_GetIn",(_this select 1),(_this select 2)];
 };
 
 
 AUG_Action = {
 	_veh = (_this select 0);
 	if( typeNAME(_veh getVariable["AUG_Attached",false]) == "OBJECT")  then {
-		[_veh] call AUG_Detach;
+		[_veh,(_this select 1)] call AUG_Detach;
 	}else{
-		[_veh] call AUG_Attach;
+		[_veh,(_this select 1)] call AUG_Attach;
+
 	}
 };
 AUG_GetIn = {
 	_aug = (_this select 0) getVariable["AUG_Attached",false];
+	if((count (crew _aug)) > 0) exitWith {hint 'Weapon must be empty to mount';};
 	(_this select 1) moveInGunner _aug;
 };
 
 AUG_Scan = {
 	_veh = (_this select 0);
-	while {alive _veh && typeNAME (_veh getVariable["AUG_Attached",false]) != "OBJECT"} do {
-	if (speed _veh <= 1 AND speed _veh >= -1 ) then {
+	while {alive _veh } do {
+	if (speed _veh <= 1 AND speed _veh >= -1 && typeNAME (_veh getVariable["AUG_Attached",false]) != "OBJECT" ) then {
 			//Detection
 			_NO = nearestObjects [[(_veh modelToWorld [0,-5,0]) select 0,(_veh modelToWorld [0,-5,0]) select 1,0],AUG_ALL,5];
 			if((count _NO)>=1)then {
@@ -148,14 +162,14 @@ AUG_Scan = {
 					//Display name
 					_Cname = typeOf _aug;
 					_Dname = getText (configFile >> "cfgVehicles" >> _Cname >> "displayName");
-					[_veh,format["<t color='#00ff00'>Attach %1</t>",_Dname]] spawn AUG_UpdateState;
+					[[_veh,format["<t color='#00ff00'>Attach %1</t>",_Dname]],"AUG_UpdateState",true,true] spawn BIS_fnc_MP;
 					//SetVariable
 					_veh setVariable["AUG_Local",_aug,true];
 				};
 			}else{
 				//Hide if nothing
 				_veh setVariable["AUG_Local",false,true];
-				[_veh,""] spawn AUG_UpdateState;
+				[[_veh,""],"AUG_UpdateState",true,true] spawn BIS_fnc_MP;
 			};
 		};
 		sleep 1;
@@ -176,7 +190,7 @@ private["_veh","_aug"];	//Import Variables
 			if(typeOf _aug in AUG_M) then {_vars = (_x select 4);};
 
 			_aug attachto [_veh,(_vars select 0)];
-			_aug setdir  (_vars select 1);
+			[[_aug,(_vars select 1)],"mpSetDir",true,true] spawn BIS_fnc_MP;
 			[_veh] spawn (_vars select 2);
 		};
 	} foreach AUG_VehConfig;
@@ -189,8 +203,8 @@ private["_veh","_aug"];	//Import Variables
 	 //Display name
 	 _Cname = typeOf _aug;
 	 _Dname = getText (configFile >> "cfgVehicles" >> _Cname >> "displayName");
-	 [_veh,format["<t color='#ff0000'>Detach %1</t>",_Dname]] spawn AUG_UpdateState;
-	 [_veh,format ["Get in %1 as Gunner",_Dname]] spawn AUG_UpdateGetInState;
+	 [[_veh,format["Get in %1 as Gunner",_Dname],"<img size='2' image='\a3\ui_f\data\IGUI\Cfg\Actions\getingunner_ca.paa'/>"],"AUG_UpdateGetInState",true,true] spawn BIS_fnc_MP;
+	 [[_veh,format["<t color='#ff0000'>Detach %1</t>",_Dname]],"AUG_UpdateState",true,true] spawn BIS_fnc_MP;
 };
 
 AUG_Detach = {
@@ -204,11 +218,10 @@ AUG_Detach = {
 	//Remove event Handler
 	[[_aug,"GetOut", 0],"mpRemoveEventHand",true,true]spawn BIS_fnc_MP;
 	_veh setVariable["AUG_Attached",false,true];
-	[_veh] spawn AUG_Scan;
 };
-
+diag_log "Augmentation Script Loaded";
 //temp
 While {true} do {
-null = [] call AUG_Init;
+	[[],"AUG_Init",true,true] spawn BIS_fnc_MP;
 sleep 15;
-}
+};
