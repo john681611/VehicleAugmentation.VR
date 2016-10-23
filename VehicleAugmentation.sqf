@@ -1,8 +1,10 @@
-//V2.0
-//Add this to the INIT line of the vehicle you want to use nul = [this] execVM "OffroadAUG.sqf";
-//Configured to work on Offroaders and trucks. Will work on nearly everything but weapon placing may be unrelyable.
-//Vehicle Configureation
+/*V3.0
+To Run: execVM "VehicleAugmentation.sqf"; in your init.sqf file
+-----------------------CONFIG--------------------------------------------------
+Vehicles allowed to be Augmented
+*/
 AUG_Vehicles = [
+//Default
 "B_G_Offroad_01_F",
 "I_G_Offroad_01_F",
 "O_G_Offroad_01_F",
@@ -37,8 +39,14 @@ AUG_Vehicles = [
 "C_Rubberboat"
 
 ];
+/*Positioning/Script config:
+Pos : Attaching position
+dir: Orentation vs front of vehicle unitName
+(optional Code): For running animations or hiding items:
+  								(_this select 0) = Vehicle
+*/
 AUG_VehConfig = [
-//[vehicles,[MG pos,dir,(optional Code)],[LMG pos,dir,(optional Code)],[L pos,dir,(optional Code)],[M pos,dir,(optional Code)]]
+//Default [vehicles,[MG pos,dir,(optional Code)],[LMG pos,dir,(optional Code)],[L pos,dir,(optional Code)],[M pos,dir,(optional Code)]]
 [["B_G_Offroad_01_F","I_G_Offroad_01_F","O_G_Offroad_01_F","C_Offroad_01_F"],[[0.25,-2,1],0],[[-0.1,-2,0.5],180,{(_this select 0) animate ["HideDoor3", 1];}],[[0,-1.5,0.25],180],[[0,-2,0],0]],
 [["I_G_Van_01_transport_F","B_G_Van_01_transport_F","O_G_Van_01_transport_F","I_C_Van_01_transport_F","C_Van_01_transport_F"],[[0.25,-2,1],0],[[-0.1,-2,0.6],180],[[0,-1.5,0.4],180],[[0,-2,0.1],0]],
 [["I_C_Offroad_02_unarmed_F","C_Offroad_02_unarmed_F"],[[0.25,-1,1],0,{(_this select 0) animate ["hideRearDoor",1]; (_this select 0) animate["hideSeatsRear",1];}],[[-0.1,-1,0.5],180,{(_this select 0) animate ["hideRearDoor",1]; (_this select 0) animate["hideSeatsRear",1];}],[[0,-0.8,0.25],180,{(_this select 0) animate ["hideRearDoor",1]; (_this select 0) animate["hideSeatsRear",1];}],[[0,-1.5,0],0,{(_this select 0) animate ["hideRearDoor",1]; (_this select 0) animate["hideSeatsRear",1];}]],
@@ -55,6 +63,8 @@ AUG_LMG = ["I_HMG_01_F","I_GMG_01_F","O_HMG_01_F","O_GMG_01_F","B_HMG_01_F","B_G
 AUG_L = ["I_static_AA_F","I_static_AT_F","O_static_AA_F","O_static_AT_F","B_static_AA_F","B_static_AT_F"];
 //Mortars
 AUG_M = ["I_Mortar_01_F","O_Mortar_01_F","B_Mortar_01_F","B_G_Mortar_01_F"];
+
+//-------------------------------END CONFIG-------------------------------------
 AUG_ALL = [] + AUG_MG + AUG_LMG + AUG_L+ AUG_M;
 
 //setup MP
