@@ -112,10 +112,8 @@ AUG_AddAction = {
 	// mp issues may occure
 	if(AUG_Use_Basic_Actions) then {
 		_ls = (_this select 0) addAction ["", {[(_this select 0)] Call AUG_Action},[],1.5,true,true,"","speed _target <= 1 AND speed _target >= -1 AND _target distance _this < 5  AND vehicle _this == _this AND ( typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' OR typeNAME (_target getVariable 'AUG_Local') != 'BOOL')"];
-		diag_log format ["%1 typqq", _ls];
   } else {
 		_ls = [ (_this select 0),"","","","speed _target <= 1 AND speed _target >= -1 AND _target distance _this < 5  AND vehicle _this == _this AND ( typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' OR typeNAME (_target getVariable 'AUG_Local') != 'BOOL')","true",{},{},{},{},[],13,nil,false,false] call BIS_fnc_holdActionAdd;
-			diag_log format ["%1 typw", _ls];
 	};
 	_vls = (_this select 0) addAction ["", {[(_this select 0),(_this select 1)] spawn AUG_GetIn;},[],5.5,true,true,"","typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' AND _target distance _this < 5"];
 	(_this select 0) setVariable ["AUG_Act",_ls,false];
