@@ -104,7 +104,8 @@ AUG_Init = {
 
 AUG_AddAction = {
 	// mp issues may occure
-	_ls = [ (_this select 0),"","","","speed _target <= 1 AND speed _target >= -1 AND _target distance _this < 5  AND vehicle _this == _this AND ( typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' OR typeNAME (_target getVariable 'AUG_Local') != 'BOOL')","true",{},{},{},{},[],13,nil,false,false] call BIS_fnc_holdActionAdd;
+	_ls = (_this select 0) addAction ["", {[(_this select 0)] Call AUG_Action},[],1.5,true,true,"","speed _target <= 1 AND speed _target >= -1 AND _target distance _this < 5  AND vehicle _this == _this AND ( typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' OR typeNAME (_target getVariable 'AUG_Local') != 'BOOL')"];
+	//_ls = [ (_this select 0),"","","","speed _target <= 1 AND speed _target >= -1 AND _target distance _this < 5  AND vehicle _this == _this AND ( typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' OR typeNAME (_target getVariable 'AUG_Local') != 'BOOL')","true",{},{},{},{},[],13,nil,false,false] call BIS_fnc_holdActionAdd;
 	_vls = (_this select 0) addAction ["", {[(_this select 0),(_this select 1)] spawn AUG_GetIn;},[],5.5,true,true,"","typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' AND _target distance _this < 5"];
 	(_this select 0) setVariable ["AUG_Act",_ls,false];
 	(_this select 0) setVariable ["AUG_Act_GetIn",_vls,false];
@@ -116,17 +117,7 @@ AUG_AddAction = {
 
 AUG_UpdateState = {
 	//Update Action
-	[(_this select 0),((_this select 0) getVariable "AUG_Act")] call BIS_fnc_holdActionRemove;
- 	_ls = [ (_this select 0),(_this select 1),
-				"\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_unbind_ca.paa",
-				"\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_unbind_ca.paa",
-				"speed _target <= 1 AND speed _target >= -1 AND _target distance _this < 5 AND vehicle _this == _this AND ( typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' OR typeNAME (_target getVariable 'AUG_Local') != 'BOOL')",
-				"true",
-					{(_this select 1) playMoveNow  "Acts_carFixingWheel";}
-					,{},
-					{(_this select 1) switchmove "";[(_this select 0)] Call AUG_Action;},
-					{(_this select 1) switchmove "";},[],13,1.5,false,false] Call BIS_fnc_holdActionAdd;
-	(_this select 0) setVariable ["AUG_Act",_ls,false];
+(_this select 0) setUserActionText [(_this select 0) getVariable "AUG_Act" ,(_this select 1)];
 
 };
 AUG_UpdateGetInState = {
