@@ -1,8 +1,11 @@
 /*V3.0
 To Run: execVM "VehicleAugmentation.sqf"; in your init.sqf file
 -----------------------CONFIG--------------------------------------------------
-Vehicles allowed to be Augmented
+Use basic Actions over press and hold actions
 */
+AUG_Use_Basic_Actions = false;
+
+/*Vehicles allowed to be Augmented*/
 AUG_Vehicles = [
 //Default
 "B_G_Offroad_01_F",
@@ -103,39 +106,45 @@ AUG_Init = {
 };
 
 AUG_AddAction = {
+	_ls = '';
 	// mp issues may occure
-	_ls = (_this select 0) addAction ["", {[(_this select 0)] Call AUG_Action},[],1.5,true,true,"","speed _target <= 1 AND speed _target >= -1 AND _target distance _this < 5  AND vehicle _this == _this AND ( typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' OR typeNAME (_target getVariable 'AUG_Local') != 'BOOL')"];
-	//_ls = [ (_this select 0),"","","","speed _target <= 1 AND speed _target >= -1 AND _target distance _this < 5  AND vehicle _this == _this AND ( typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' OR typeNAME (_target getVariable 'AUG_Local') != 'BOOL')","true",{},{},{},{},[],13,nil,false,false] call BIS_fnc_holdActionAdd;
+	if(AUG_Use_Basic_Actions) then {
+		_ls = (_this select 0) addAction ["", {[(_this select 0)] Call AUG_Action},[],1.5,true,true,"","speed _target <= 1 AND speed _target >= -1 AND _target distance _this < 5  AND vehicle _this == _this AND ( typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' OR typeNAME (_target getVariable 'AUG_Local') != 'BOOL')"];
+		diag_log format ["%1 typqq", _ls];
+  } else {
+		_ls = [ (_this select 0),"","","","speed _target <= 1 AND speed _target >= -1 AND _target distance _this < 5  AND vehicle _this == _this AND ( typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' OR typeNAME (_target getVariable 'AUG_Local') != 'BOOL')","true",{},{},{},{},[],13,nil,false,false] call BIS_fnc_holdActionAdd;
+			diag_log format ["%1 typw", _ls];
+	};
 	_vls = (_this select 0) addAction ["", {[(_this select 0),(_this select 1)] spawn AUG_GetIn;},[],5.5,true,true,"","typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' AND _target distance _this < 5"];
 	(_this select 0) setVariable ["AUG_Act",_ls,false];
 	(_this select 0) setVariable ["AUG_Act_GetIn",_vls,false];
 	(_this select 0) setVariable["AUG_Attached",false,true];
 	(_this select 0) setVariable["AUG_Local",false,true];
-
-
 };
 
 AUG_UpdateState = {
 	//Update Action
-/*[(_this select 0),((_this select 0) getVariable "AUG_Act")] call BIS_fnc_holdActionRemove;
-_ls = [ (_this select 0),(_this select 1),
- 			"\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_unbind_ca.paa",
- 			"\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_unbind_ca.paa",
- 			"speed _target <= 1 AND speed _target >= -1 AND _target distance _this < 5 AND vehicle _this == _this AND ( typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' OR typeNAME (_target getVariable 'AUG_Local') != 'BOOL')",
- 			"true",
- 			{(_this select 1) playMoveNow  "Acts_carFixingWheel";},
- 			{},
- 			{(_this select 1) switchmove "";[(_this select 0)] Call AUG_Action;},
- 			{(_this select 1) switchmove "";},[],13,1.5,false,false] Call BIS_fnc_holdActionAdd;
-(_this select 0) setVariable ["AUG_Act",_ls,false];*/
-(_this select 0) setUserActionText [(_this select 0) getVariable "AUG_Act" ,(_this select 1)];
-
+	if(AUG_Use_Basic_Actions) then {
+		(_this select 0) setUserActionText [(_this select 0) getVariable "AUG_Act" ,(_this select 1)];
+	} else {
+		[(_this select 0),((_this select 0) getVariable "AUG_Act")] call BIS_fnc_holdActionRemove;
+		_ls = [ (_this select 0),(_this select 1),
+		 			"\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_unbind_ca.paa",
+		 			"\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_unbind_ca.paa",
+		 			"speed _target <= 1 AND speed _target >= -1 AND _target distance _this < 5 AND vehicle _this == _this AND ( typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' OR typeNAME (_target getVariable 'AUG_Local') != 'BOOL')",
+		 			"true",
+		 			{(_this select 1) playMoveNow  "Acts_carFixingWheel";},
+		 			{},
+		 			{(_this select 1) switchmove "";[(_this select 0)] Call AUG_Action;},
+		 			{(_this select 1) switchmove "";},[],13,1.5,false,false] Call BIS_fnc_holdActionAdd;
+		(_this select 0) setVariable ["AUG_Act",_ls,false];
+	};
 };
+
 AUG_UpdateGetInState = {
 	//Update Action
 	(_this select 0) setUserActionText [(_this select 0) getVariable "AUG_Act_GetIn",(_this select 1),(_this select 2)];
 };
-
 
 AUG_Action = {
 	_veh = (_this select 0);
@@ -143,9 +152,9 @@ AUG_Action = {
 		[_veh,(_this select 1)] call AUG_Detach;
 	}else{
 		[_veh,(_this select 1)] call AUG_Attach;
-
 	}
 };
+
 AUG_GetIn = {
 	_aug = (_this select 0) getVariable["AUG_Attached",false];
 	if((count (crew _aug)) > 0) exitWith {hint 'Weapon must be empty to mount';};
