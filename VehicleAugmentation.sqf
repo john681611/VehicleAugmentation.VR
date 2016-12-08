@@ -98,10 +98,12 @@ _obj setDir _dir;
 //Functions
 AUG_Init = {
 	{
-	 if(typeof _x in  AUG_Vehicles && isNil {_x getVariable "AUG_Act"}) then {
-		 [_x] spawn AUG_AddAction;
+	 if(typeof _x in  AUG_Vehicles && isNil {_x getVariable "AUG_Attached"}) then {
+	 	[_x] spawn AUG_AddAction;
+	 	if(isServer) then {
 		 [_x] spawn AUG_Scan;
-		 };
+ 		};
+	 };
 	} foreach vehicles; //Units
 };
 
