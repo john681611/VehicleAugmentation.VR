@@ -117,6 +117,17 @@ AUG_AddAction = {
 
 AUG_UpdateState = {
 	//Update Action
+/*[(_this select 0),((_this select 0) getVariable "AUG_Act")] call BIS_fnc_holdActionRemove;
+_ls = [ (_this select 0),(_this select 1),
+ 			"\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_unbind_ca.paa",
+ 			"\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_unbind_ca.paa",
+ 			"speed _target <= 1 AND speed _target >= -1 AND _target distance _this < 5 AND vehicle _this == _this AND ( typeNAME (_target getVariable 'AUG_Attached') != 'BOOL' OR typeNAME (_target getVariable 'AUG_Local') != 'BOOL')",
+ 			"true",
+ 			{(_this select 1) playMoveNow  "Acts_carFixingWheel";},
+ 			{},
+ 			{(_this select 1) switchmove "";[(_this select 0)] Call AUG_Action;},
+ 			{(_this select 1) switchmove "";},[],13,1.5,false,false] Call BIS_fnc_holdActionAdd;
+(_this select 0) setVariable ["AUG_Act",_ls,false];*/
 (_this select 0) setUserActionText [(_this select 0) getVariable "AUG_Act" ,(_this select 1)];
 
 };
