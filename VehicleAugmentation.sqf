@@ -164,36 +164,52 @@ AUG_GetIn = {
 AUG_Scan = {
 	_veh = (_this select 0);
 	while {alive _veh } do {
-	if (speed _veh <= 1 AND speed _veh >= -1 && typeNAME (_veh getVariable["AUG_Attached",false]) != "OBJECT" ) then {
-			//Detection
-			_NO = nearestObjects [[(_veh modelToWorld [0,-5,0]) select 0,(_veh modelToWorld [0,-5,0]) select 1,0],AUG_ALL,5];
-			if((count _NO)>=1)then {
-				_aug = (_NO select 0);
-				_current =  _veh getVariable["AUG_Local",false];
-				_test  =  false;
-				//Duplicate Test
-				if(typeNAME _current != "BOOL") then {
-					if(_current != _aug) then {
+
+		//Find nearest player
+		_allHCs = entities "HeadlessClient_F";
+	  _allHPs = allPlayers - _allHCs;
+		_distance = -1;
+		{
+			_tempdist = (_veh distance _x);
+		    if (_distance == -1) then {
+					_distance = _tempdist;
+		    } else {
+					if (_tempdist < _distance) then {
+					    _distance = _tempdist;
+					};
+				};
+		} forEach _allHPs;
+		//if stopped, nothing attached and player with 10m
+		if (speed _veh <= 1 AND speed _veh >= -1 && typeNAME (_veh getVariable["AUG_Attached",false]) != "OBJECT" && _distance > 10 ) then {
+				//Detection
+				_NO = nearestObjects [[(_veh modelToWorld [0,-5,0]) select 0,(_veh modelToWorld [0,-5,0]) select 1,0],AUG_ALL,5];
+				if((count _NO)>=1)then {
+					_aug = (_NO select 0);
+					_current =  _veh getVariable["AUG_Local",false];
+					_test  =  false;
+					//Duplicate Test
+					if(typeNAME _current != "BOOL") then {
+						if(_current != _aug) then {
+							_test  =  true;
+						};
+					}else{
 						_test  =  true;
 					};
+					if(_test) then {
+						//Display name
+						_Cname = typeOf _aug;
+						_Dname = getText (configFile >> "cfgVehicles" >> _Cname >> "displayName");
+						[[_veh,format["<t color='#00ff00'>Attach %1</t>",_Dname]],"AUG_UpdateState",true,true] spawn BIS_fnc_MP;
+						//SetVariable
+						_veh setVariable["AUG_Local",_aug,true];
+					};
 				}else{
-					_test  =  true;
+					//Hide if nothing
+					_veh setVariable["AUG_Local",false,true];
+					[[_veh,""],"AUG_UpdateState",true,true] spawn BIS_fnc_MP;
 				};
-				if(_test) then {
-					//Display name
-					_Cname = typeOf _aug;
-					_Dname = getText (configFile >> "cfgVehicles" >> _Cname >> "displayName");
-					[[_veh,format["<t color='#00ff00'>Attach %1</t>",_Dname]],"AUG_UpdateState",true,true] spawn BIS_fnc_MP;
-					//SetVariable
-					_veh setVariable["AUG_Local",_aug,true];
-				};
-			}else{
-				//Hide if nothing
-				_veh setVariable["AUG_Local",false,true];
-				[[_veh,""],"AUG_UpdateState",true,true] spawn BIS_fnc_MP;
 			};
-		};
-		sleep 1;
+			sleep 3;
 	};
 };
 
