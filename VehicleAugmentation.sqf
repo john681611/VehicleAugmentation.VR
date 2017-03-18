@@ -180,7 +180,7 @@ AUG_Scan = {
 				};
 		} forEach _allHPs;
 		//if stopped, nothing attached and player with 10m
-		if (speed _veh <= 1 AND speed _veh >= -1 && typeNAME (_veh getVariable["AUG_Attached",false]) != "OBJECT" && _distance > 10 ) then {
+		if (_distance < 10 && speed _veh <= 1 AND speed _veh >= -1 && typeNAME (_veh getVariable["AUG_Attached",false]) != "OBJECT") then {
 				//Detection
 				_NO = nearestObjects [[(_veh modelToWorld [0,-5,0]) select 0,(_veh modelToWorld [0,-5,0]) select 1,0],AUG_ALL,5];
 				if((count _NO)>=1)then {
@@ -259,6 +259,6 @@ AUG_Detach = {
 diag_log "Augmentation Script Loaded";
 //temp
 While {true} do {
-	[[],"AUG_Init",true,true] spawn BIS_fnc_MP;
-sleep 15;
+	[] spawn AUG_Init;
+sleep 30;
 };
