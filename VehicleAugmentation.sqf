@@ -3,6 +3,7 @@ To Run: execVM "VehicleAugmentation.sqf"; in your init.sqf file
 -----------------------CONFIG--------------------------------------------------
 Use basic Actions over press and hold actions
 */
+if(isDedicated) exitWith {};
 AUG_Use_Basic_Actions = false;
 
 /*Vehicles allowed to be Augmented*/
@@ -100,9 +101,7 @@ AUG_Init = {
 	{
 	 if(typeof _x in  AUG_Vehicles && isNil {_x getVariable "AUG_Attached"}) then {
 	 	[_x] spawn AUG_AddAction;
-	 	if(isServer) then {
-		 [_x] spawn AUG_Scan;
- 		};
+		[_x] spawn AUG_Scan;
 	 };
 	} foreach vehicles; //Units
 };
